@@ -9,14 +9,14 @@ import SideBar from "../../components/Header/SideBar";
 export default function Index() {
     const sideBarRef = useRef(null);
 
-    const handleContactClick = () => {
-        sideBarRef.current?.open?.();
-    };
+    // const handleContactClick = () => {
+    //     sideBarRef.current?.open?.();
+    // };
 
     return (
         <div>
             <SideBar ref={sideBarRef} />
-            <Navbar onContactClick={handleContactClick} />
+            {/* <Navbar onContactClick={handleContactClick} /> */}
             <Header />
             <MainComponent />
             <Footer />

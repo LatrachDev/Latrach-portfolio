@@ -340,49 +340,30 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
     [openMenu, closeMenu, toggleMenu]
   );
 
+  const sideBarRef = useRef(null);
+
+  const handleContactClick = () => {
+      sideBarRef.current?.open?.();
+  };
+
   return (
     <div
       className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
     >
-      <div
-        className={(className ? className + ' ' : '') + 'staggered-menu-wrapper relative w-full h-full'}
-        style={accentColor ? { ['--sm-accent']: accentColor } : undefined}
-        data-position={position}
-        data-open={open || undefined}
-      >
-        <div
-          ref={preLayersRef}
-          className="sm-prelayers absolute top-0 right-0 bottom-0 pointer-events-none z-[5]"
-          aria-hidden="true"
-        >
-          {(() => {
-            const raw = colors && colors.length ? colors.slice(0, 4) : ['#1e1e22', '#35353c'];
-            let arr = [...raw];
-            if (arr.length >= 3) {
-              const mid = Math.floor(arr.length / 2);
-              arr.splice(mid, 1);
-            }
-            return arr.map((c, i) => (
-              <div
-                key={i}
-                className="sm-prelayer absolute top-0 right-0 h-full w-full translate-x-0"
-                style={{ background: c }}
-              />
-            ));
-          })()}
-        </div>
-
-        <header
-          className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
-          aria-label="Main navigation header"
-        >
-          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-        
-          </div>
+      <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-center px-4 py-6 pointer-events-none">
+        <div className="flex w-full max-w-6xl items-center justify-between rounded-full border border-white/10 bg-black/60 px-6 py-4 text-white shadow-[0_20px_60px_rgba(9,3,20,0.45)] backdrop-blur-xl pointer-events-auto">
+          <a href="#home" className="flex items-center gap-3">
+            <img
+              src="/Logo/Logo-Latrach-white.png"
+              alt="Mohammed Latrach Logo"
+              className="h-10 w-10 object-contain"
+            />
+            <span className="text-lg font-semibold tracking-wide">Mohammed Latrach</span>
+          </a>
 
           <button
             ref={toggleBtnRef}
-            className="sm-toggle flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 pointer-events-auto"
+            className="sm-toggle flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 relative z-50"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="staggered-menu-panel"
@@ -409,12 +390,50 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
               />
             </span>
           </button>
+        </div>
+      </nav>
+      
+      <div
+        className={(className ? className + ' ' : '') + `staggered-menu-wrapper ${isFixed ? 'fixed top-0 left-0 w-screen h-screen' : 'relative w-full h-full'} ${!open ? 'pointer-events-none' : 'pointer-events-auto'}`}
+        style={accentColor ? { ['--sm-accent']: accentColor } : undefined}
+        data-position={position}
+        data-open={open || undefined}
+      >
+        <div
+          ref={preLayersRef}
+          className="sm-prelayers fixed top-0 right-0 h-screen pointer-events-none z-[5]"
+          aria-hidden="true"
+        >
+          {(() => {
+            const raw = colors && colors.length ? colors.slice(0, 4) : ['#1e1e22', '#35353c'];
+            let arr = [...raw];
+            if (arr.length >= 3) {
+              const mid = Math.floor(arr.length / 2);
+              arr.splice(mid, 1);
+            }
+            return arr.map((c, i) => (
+              <div
+                key={i}
+                className="sm-prelayer absolute top-0 right-0 h-full w-full translate-x-0"
+                style={{ background: c }}
+              />
+            ));
+          })()}
+        </div>
+
+        <header
+          className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
+          aria-label="Main navigation header"
+        >
+          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
+        
+          </div>
         </header>
 
         <aside
           id="staggered-menu-panel"
           ref={panelRef}
-          className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px]"
+          className="staggered-menu-panel fixed top-0 right-0 h-screen bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px]"
           style={{ WebkitBackdropFilter: 'blur(12px)' }}
           aria-hidden={!open}
         >
@@ -423,7 +442,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
               className="sm-panel-list list-none m-0 p-0 flex flex-col gap-2"
               role="list"
               data-numbering={displayItemNumbering || undefined}
-            >
+              >
               {items && items.length ? (
                 items.map((it, idx) => (
                   <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
@@ -432,7 +451,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
                       href={it.link}
                       aria-label={it.ariaLabel}
                       data-index={idx + 1}
-                    >
+                      >
                       <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
                         {it.label}
                       </span>
@@ -464,7 +483,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
                         target="_blank"
                         rel="noopener noreferrer"
                         className="sm-socials-link text-[1.2rem] font-medium text-[#111] no-underline relative inline-block py-[2px] transition-[color,opacity] duration-300 ease-linear"
-                      >
+                        >
                         {s.label}
                       </a>
                     </li>
@@ -492,29 +511,28 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
 .sm-scope .sm-line { display: none !important; }
-.sm-scope .staggered-menu-panel { poimport StaggeredMenu from '../../../ts-default/Components/StaggeredMenu/StaggeredMenu';
-sition: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 10; }
+.sm-scope .staggered-menu-panel { position: fixed; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100vh; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 45; pointer-events: auto; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
-.sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
+.sm-scope .sm-prelayers { position: fixed; top: 0; right: 0; height: 100vh; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
 .sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
 .sm-scope .sm-socials { margin-top: auto; padding-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
-.sm-scope .sm-socials-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent, #ff0000); }
+.sm-scope .sm-socials-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent2, #5227FF); }
 .sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .sm-scope .sm-socials-list .sm-socials-link { opacity: 1; transition: opacity 0.3s ease; }
 .sm-scope .sm-socials-list:hover .sm-socials-link:not(:hover) { opacity: 0.35; }
 .sm-scope .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) { opacity: 0.35; }
 .sm-scope .sm-socials-list .sm-socials-link:hover,
 .sm-scope .sm-socials-list .sm-socials-link:focus-visible { opacity: 1; }
-.sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, #ff0000); outline-offset: 3px; }
+.sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent2, #5227FF); outline-offset: 3px; }
 .sm-scope .sm-socials-link { font-size: 1.2rem; font-weight: 500; color: #111; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
-.sm-scope .sm-socials-link:hover { color: var(--sm-accent, #ff0000); }
+.sm-scope .sm-socials-link:hover { color: var(--sm-accent2, #5227FF); }
 .sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: #fff; text-transform: uppercase; }
 .sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .sm-scope .sm-panel-item { position: relative; color: #000; font-weight: 600; font-size: 4rem; cursor: pointer; line-height: 1; letter-spacing: -2px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
 .sm-scope .sm-panel-itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
-.sm-scope .sm-panel-item:hover { color: var(--sm-accent, #ff0000); }
+.sm-scope .sm-panel-item:hover { color: var(--sm-accent2, #5227FF); }
 .sm-scope .sm-panel-list[data-numbering] { counter-reset: smItem; }
 .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { counter-increment: smItem; content: counter(smItem, decimal-leading-zero); position: absolute; top: 0.1em; right: 3.2em; font-size: 18px; font-weight: 400; color: var(--sm-accent, #ff0000); letter-spacing: 0; pointer-events: none; user-select: none; opacity: var(--sm-num-opacity, 0); }
 @media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img { filter: invert(100%); } }
