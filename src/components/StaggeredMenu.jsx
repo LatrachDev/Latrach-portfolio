@@ -54,12 +54,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
       const panel = panelRef.current;
       const preContainer = preLayersRef.current;
 
-      const plusH = plusHRef.current;
-      const plusV = plusVRef.current;
-      const middleLine = middleLineRef.current;
-      const icon = iconRef.current;
-
-      if (!panel || !plusH || !plusV || !middleLine || !icon) return;
+      if (!panel) return;
 
       let preLayers = [];
       if (preContainer) {
@@ -69,11 +64,6 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
-
-      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0, y: 0 });
-      gsap.set(middleLine, { opacity: 1 });
-      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 0, y: 0 });
-      gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
 
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
@@ -215,31 +205,8 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
     });
   }, [position]);
 
-  const animateIcon = useCallback(opening => {
-    const icon = iconRef.current;
-    const topLine = plusHRef.current;
-    const middleLine = middleLineRef.current;
-    const bottomLine = plusVRef.current;
-    if (!icon || !topLine || !middleLine || !bottomLine) return;
-
-    spinTweenRef.current?.kill();
-
-    if (opening) {
-      // Transform hamburger to X: top rotates down, middle fades out, bottom rotates up
-      gsap.set([topLine, bottomLine], { transformOrigin: '50% 50%' });
-      spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power4.out' } })
-        .to(topLine, { rotate: 45, y: 6, duration: 0.5 }, 0)
-        .to(middleLine, { opacity: 0, duration: 0.3 }, 0)
-        .to(bottomLine, { rotate: -45, y: -6, duration: 0.5 }, 0);
-    } else {
-      // Transform X back to hamburger
-      spinTweenRef.current = gsap
-        .timeline({ defaults: { ease: 'power3.inOut' } })
-        .to(topLine, { rotate: 0, y: 0, duration: 0.35 }, 0)
-        .to(middleLine, { opacity: 1, duration: 0.35 }, 0)
-        .to(bottomLine, { rotate: 0, y: 0, duration: 0.35 }, 0);
-    }
+  const animateIcon = useCallback(() => {
+    // Icon animation removed - using static burger menu icon
   }, []);
 
   const animateColor = useCallback(
@@ -371,23 +338,10 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
             type="button"
           >
             <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-            <span
-              ref={iconRef}
-              className="sm-icon relative flex flex-col items-center justify-center gap-1.5 [will-change:transform]"
-              aria-hidden="true"
-            >
-              <span
-                ref={plusHRef}
-                className="sm-icon-line block h-0.5 w-5 rounded bg-current [will-change:transform]"
-              />
-              <span
-                ref={middleLineRef}
-                className="sm-icon-line block h-0.5 w-5 rounded bg-current [will-change:transform]"
-              />
-              <span
-                ref={plusVRef}
-                className="sm-icon-line sm-icon-line-v block h-0.5 w-5 rounded bg-current [will-change:transform]"
-              />
+            <span className="flex flex-col items-center justify-center gap-1.5">
+              <span className="block h-0.5 w-5 rounded bg-current" />
+              <span className="block h-0.5 w-5 rounded bg-current" />
+              <span className="block h-0.5 w-5 rounded bg-current" />
             </span>
           </button>
         </div>
