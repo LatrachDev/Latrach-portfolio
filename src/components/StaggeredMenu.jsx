@@ -350,7 +350,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
     <div
       className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
     >
-      <nav className="fixed inset-x-0 top-0 z-50 flex items-center justify-center px-4 py-6 pointer-events-none">
+      <nav className="fixed inset-x-0 top-0 z-30 flex items-center justify-center px-4 py-6 pointer-events-none">
         <div className="flex w-full max-w-6xl items-center justify-between rounded-full border border-white/10 bg-black/60 px-6 py-4 text-white shadow-[0_20px_60px_rgba(9,3,20,0.45)] backdrop-blur-xl pointer-events-auto">
           <a href="#home" className="flex items-center gap-3">
             <img
@@ -401,7 +401,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
       >
         <div
           ref={preLayersRef}
-          className="sm-prelayers fixed top-0 right-0 h-screen pointer-events-none z-[5]"
+          className="sm-prelayers fixed top-0 right-0 h-screen pointer-events-none z-40"
           aria-hidden="true"
         >
           {(() => {
@@ -421,19 +421,12 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
           })()}
         </div>
 
-        <header
-          className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
-          aria-label="Main navigation header"
-        >
-          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-        
-          </div>
-        </header>
+  
 
         <aside
           id="staggered-menu-panel"
           ref={panelRef}
-          className="staggered-menu-panel fixed top-0 right-0 h-screen bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 backdrop-blur-[12px]"
+          className="staggered-menu-panel fixed top-0 right-0 h-screen bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-50 backdrop-blur-[12px]"
           style={{ WebkitBackdropFilter: 'blur(12px)' }}
           aria-hidden={!open}
         >
@@ -511,9 +504,9 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
 .sm-scope .sm-line { display: none !important; }
-.sm-scope .staggered-menu-panel { position: fixed; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100vh; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 45; pointer-events: auto; }
+.sm-scope .staggered-menu-panel { position: fixed; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100vh; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 60; pointer-events: auto; }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
-.sm-scope .sm-prelayers { position: fixed; top: 0; right: 0; height: 100vh; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
+.sm-scope .sm-prelayers { position: fixed; top: 0; right: 0; height: 100vh; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 55; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
 .sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
