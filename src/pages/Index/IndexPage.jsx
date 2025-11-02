@@ -19,6 +19,7 @@ export default function Index() {
             <Navbar onContactClick={handleContactClick} />
             <Header />
             <MainComponent />
+            <Footer />
         </div>
     );
 }

@@ -1,4 +1,5 @@
-// components/Header/NavBar.jsx
+import StaggeredMenu from "../StaggeredMenu";
+
 function Navbar({ onContactClick }) {
   return (
     <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-center px-4 py-6">

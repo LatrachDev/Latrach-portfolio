@@ -31,6 +31,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
   const plusHRef = useRef(null);
   const plusVRef = useRef(null);
+  const middleLineRef = useRef(null);
   const iconRef = useRef(null);
 
   const textInnerRef = useRef(null);
@@ -55,10 +56,10 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
       const plusH = plusHRef.current;
       const plusV = plusVRef.current;
+      const middleLine = middleLineRef.current;
       const icon = iconRef.current;
-      const textInner = textInnerRef.current;
 
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if (!panel || !plusH || !plusV || !middleLine || !icon) return;
 
       let preLayers = [];
       if (preContainer) {
@@ -69,11 +70,10 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
 
-      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
-      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
+      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0, y: 0 });
+      gsap.set(middleLine, { opacity: 1 });
+      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 0, y: 0 });
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
-
-      gsap.set(textInner, { yPercent: 0 });
 
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
@@ -217,24 +217,28 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
   const animateIcon = useCallback(opening => {
     const icon = iconRef.current;
-    const h = plusHRef.current;
-    const v = plusVRef.current;
-    if (!icon || !h || !v) return;
+    const topLine = plusHRef.current;
+    const middleLine = middleLineRef.current;
+    const bottomLine = plusVRef.current;
+    if (!icon || !topLine || !middleLine || !bottomLine) return;
 
     spinTweenRef.current?.kill();
 
     if (opening) {
-      gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+      // Transform hamburger to X: top rotates down, middle fades out, bottom rotates up
+      gsap.set([topLine, bottomLine], { transformOrigin: '50% 50%' });
       spinTweenRef.current = gsap
         .timeline({ defaults: { ease: 'power4.out' } })
-        .to(h, { rotate: 45, duration: 0.5 }, 0)
-        .to(v, { rotate: -45, duration: 0.5 }, 0);
+        .to(topLine, { rotate: 45, y: 6, duration: 0.5 }, 0)
+        .to(middleLine, { opacity: 0, duration: 0.3 }, 0)
+        .to(bottomLine, { rotate: -45, y: -6, duration: 0.5 }, 0);
     } else {
+      // Transform X back to hamburger
       spinTweenRef.current = gsap
         .timeline({ defaults: { ease: 'power3.inOut' } })
-        .to(h, { rotate: 0, duration: 0.35 }, 0)
-        .to(v, { rotate: 90, duration: 0.35 }, 0)
-        .to(icon, { rotate: 0, duration: 0.001 }, 0);
+        .to(topLine, { rotate: 0, y: 0, duration: 0.35 }, 0)
+        .to(middleLine, { opacity: 1, duration: 0.35 }, 0)
+        .to(bottomLine, { rotate: 0, y: 0, duration: 0.35 }, 0);
     }
   }, []);
 
@@ -311,8 +315,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
     animateIcon(target);
     animateColor(target);
-    animateText(target);
-  }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
+  }, [playOpen, playClose, animateIcon, animateColor, onMenuOpen, onMenuClose]);
 
   const openMenu = useCallback(() => {
     if (!openRef.current) {
@@ -373,52 +376,36 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
           className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
           aria-label="Main navigation header"
         >
-          {/* <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-            <img
-              src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
-              alt="Logo"
-              className="sm-logo-img block h-8 w-auto object-contain"
-              draggable={false}
-              width={110}
-              height={24}
-            />
-          </div> */}
+          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
+        
+          </div>
 
           <button
             ref={toggleBtnRef}
-            className="sm-toggle relative inline-flex items-center gap-[0.3rem] bg-transparent border-0 cursor-pointer text-[#e9e9ef] font-medium leading-none overflow-visible pointer-events-auto"
+            className="sm-toggle flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 pointer-events-auto"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="staggered-menu-panel"
             onClick={toggleMenu}
             type="button"
           >
-            <span
-              ref={textWrapRef}
-              className="sm-toggle-textWrap relative inline-block h-[1em] overflow-hidden whitespace-nowrap w-[var(--sm-toggle-width,auto)] min-w-[var(--sm-toggle-width,auto)]"
-              aria-hidden="true"
-            >
-              <span ref={textInnerRef} className="sm-toggle-textInner flex flex-col leading-none">
-                {textLines.map((l, i) => (
-                  <span className="sm-toggle-line block h-[1em] leading-none" key={i}>
-                    {l}
-                  </span>
-                ))}
-              </span>
-            </span>
-
+            <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
             <span
               ref={iconRef}
-              className="sm-icon relative w-[14px] h-[14px] shrink-0 inline-flex items-center justify-center [will-change:transform]"
+              className="sm-icon relative flex flex-col items-center justify-center gap-1.5 [will-change:transform]"
               aria-hidden="true"
             >
               <span
                 ref={plusHRef}
-                className="sm-icon-line absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-[2px] -translate-x-1/2 -translate-y-1/2 [will-change:transform]"
+                className="sm-icon-line block h-0.5 w-5 rounded bg-current [will-change:transform]"
+              />
+              <span
+                ref={middleLineRef}
+                className="sm-icon-line block h-0.5 w-5 rounded bg-current [will-change:transform]"
               />
               <span
                 ref={plusVRef}
-                className="sm-icon-line sm-icon-line-v absolute left-1/2 top-1/2 w-full h-[2px] bg-current rounded-[2px] -translate-x-1/2 -translate-y-1/2 [will-change:transform]"
+                className="sm-icon-line sm-icon-line-v block h-0.5 w-5 rounded bg-current [will-change:transform]"
               />
             </span>
           </button>
