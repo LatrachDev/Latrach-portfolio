@@ -325,7 +325,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
               alt="Mohammed Latrach Logo"
               className="h-10 w-10 object-contain"
             />
-            <span className="text-lg font-semibold tracking-wide">Mohammed Latrach</span>
+            <span className="text-xs sm:text-lg font-semibold tracking-wide">Mohammed Latrach</span>
           </a>
 
           <button

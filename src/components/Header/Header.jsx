@@ -3,11 +3,11 @@ function Header() {
     <header className="absolute flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#090217] px-6 py-24 text-white">
       <div className="relative z-10 flex w-3xl  flex-col items-center gap-10 text-center">
         <span className="rounded-full border border-white/10 bg-white/5 px-6 py-2 text-sm font-medium uppercase tracking-[0.4em] text-white/70 backdrop-blur">
-          Entrepreneur
+          Ux/Ui Designer & Web Developer
         </span>
 
         <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl uppercase">
-          Mohammed Latrach
+          Mohammed Latrach 
         </h1>
 
         <p className="max-w-2xl text-lg text-white/70"> 
