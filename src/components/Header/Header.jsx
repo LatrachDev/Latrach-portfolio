@@ -1,17 +1,17 @@
 function Header() {
   return (
-    <header className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#090217] px-6 py-24 text-white">
-      <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-10 text-center">
+    <header className="absolute flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#090217] px-6 py-24 text-white">
+      <div className="relative z-10 flex w-3xl  flex-col items-center gap-10 text-center">
         <span className="rounded-full border border-white/10 bg-white/5 px-6 py-2 text-sm font-medium uppercase tracking-[0.4em] text-white/70 backdrop-blur">
-          Portfolio 2025
+          Entrepreneur
         </span>
 
-        <h1 className="text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl">
+        <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
           Mohammed Latrach
         </h1>
 
         <p className="max-w-2xl text-lg text-white/70">
-          Product designer & full-stack creative crafting immersive digital experiences. I build delightful user journeys and the systems that power them.
+        I can help you bring your project to life by combining technical skills, user-friendly design, and effective communication to ensure your goals are achieved smoothly and efficiently.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
