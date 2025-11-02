@@ -1,4 +1,3 @@
-// components/Header/SideBar.jsx
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import StaggeredMenu from '../StaggeredMenu';
 
@@ -6,7 +5,7 @@ const menuItems = [
   { label: 'Home', link: '/' },
   { label: 'About', link: '/' },
   { label: 'Gallery', link: '#gallery' },
-  { label: 'Dev', link: '#dev' },
+  { label: 'Website', link: '#dev' },
   { label: 'Contact', link: '#contact' },
 ];
 

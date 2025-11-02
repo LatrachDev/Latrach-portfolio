@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../../components/Header/NavBar';
 import Footer from '../../components/Footer/Footer';
 
 export default function DeveloperPage() {
