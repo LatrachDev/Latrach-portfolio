@@ -315,7 +315,7 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
 
   return (
     <div
-      className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
+      className={`sm-scope z-40 'w-full h-full'`}
     >
       <nav className="fixed inset-x-0 top-0 z-30 flex items-center justify-center px-4 py-6 pointer-events-none">
         <div className="flex w-full max-w-6xl items-center justify-between rounded-full border border-white/10 bg-black/60 px-6 py-4 text-white shadow-[0_20px_60px_rgba(9,3,20,0.45)] backdrop-blur-xl pointer-events-auto">
