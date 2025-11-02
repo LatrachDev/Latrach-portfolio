@@ -3,16 +3,19 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import StaggeredMenu from '../StaggeredMenu';
 
 const menuItems = [
-  { label: 'Home', ariaLabel: 'Go to home section', link: '#home' },
-  { label: 'Projects', ariaLabel: 'View projects', link: '#projects' },
-  { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' },
-  { label: 'Gallery', ariaLabel: 'View gallery', link: '#gallery' }
+  { label: 'Home', link: '/' },
+  { label: 'About', link: '/' },
+  { label: 'Gallery', link: '#gallery' },
+  { label: 'Dev', link: '#dev' },
+  { label: 'Contact', link: '#contact' },
 ];
 
 const socialItems = [
-  { label: 'Twitter', link: 'https://twitter.com' },
-  { label: 'GitHub', link: 'https://github.com' },
-  { label: 'LinkedIn', link: 'https://linkedin.com' }
+  { label: 'Instagram', link: 'https://instagram.com/mohammed_latrach' },
+  { label: 'GitHub', link: 'https://github.com/LatrachDev' },
+  { label: 'LinkedIn', link: 'https://www.linkedin.com/in/latrachdev1/' },
+  { label: 'WhatsApp', link: 'https://wa.me/+212645338599' },
+  { label: 'Behance', link: 'https://www.behance.net/latrach' },
 ];
 
 const SideBar = forwardRef(function SideBar(_, ref) {
