@@ -6,11 +6,11 @@ function Header() {
           Entrepreneur
         </span>
 
-        <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+        <h1 className="text-4xl font-black leading-tight sm:text-5xl md:text-6xl uppercase">
           Mohammed Latrach
         </h1>
 
-        <p className="max-w-2xl text-lg text-white/70">
+        <p className="max-w-2xl text-lg text-white/70"> 
         I can help you bring your project to life by combining technical skills, user-friendly design, and effective communication to ensure your goals are achieved smoothly and efficiently.
         </p>
 
