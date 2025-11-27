@@ -5,12 +5,12 @@ export default function Formations() {
         {
             id: 1,
             title: "Full Stack Web Development",
-            institution: "Online Platform / Self-Taught",
-            period: "2021 - Present",
+            institution: "YouCode School",
+            period: "2024 - Present",
             type: "Certification & Self-Learning",
             description: "Comprehensive learning of modern web development technologies including React, Node.js, MongoDB, and Express. Built multiple projects to master the MERN stack.",
             skills: ["MERN Stack", "RESTful APIs", "Authentication", "Database Design", "Deployment"],
-            status: "Completed"
+            status: "In Progress"
         },
         {
             id: 2,
@@ -21,26 +21,6 @@ export default function Formations() {
             description: "Studied principles of graphic design, typography, color theory, and visual communication. Gained expertise in Adobe Creative Suite and design thinking.",
             skills: ["Adobe Creative Suite", "Typography", "Color Theory", "Brand Identity", "Layout Design"],
             status: "Completed"
-        },
-        {
-            id: 3,
-            title: "UI/UX Design Specialization",
-            institution: "Online Learning Platforms",
-            period: "2021 - 2022",
-            type: "Online Certification",
-            description: "Focused on user-centered design principles, wireframing, prototyping, and usability testing. Learned to create intuitive and engaging user experiences.",
-            skills: ["Figma", "User Research", "Wireframing", "Prototyping", "Usability Testing"],
-            status: "Completed"
-        },
-        {
-            id: 4,
-            title: "Business & Entrepreneurship",
-            institution: "Business Courses & Experience",
-            period: "Ongoing",
-            type: "Continuous Learning",
-            description: "Developing business acumen through practical experience as a freelancer, learning client management, project planning, and business development.",
-            skills: ["Client Management", "Project Planning", "Business Development", "Communication"],
-            status: "In Progress"
         }
     ];
 

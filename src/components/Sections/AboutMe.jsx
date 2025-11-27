@@ -1,5 +1,5 @@
 import React from 'react';
-import myImage from '../../../public/Images/Main-section-cropped.png'
+import myImage from '../../../public/Images/MyProfile.jpg'
 
 export default function AboutMe() {
     const handleContactClick = () => {
@@ -13,9 +13,11 @@ export default function AboutMe() {
     return (
         <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
             <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                    <div className="flex justify-center lg:justify-start">
+                <div className="grid mx-auto grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                    <div className='w-full'>
+                    <div className="flex items-center mx-auto justify-center rounded-full overflow-hidden w-[80%] lg:justify-start">
                         <img src={myImage} alt="This is just my photo :)" />
+                    </div>
                     </div>
 
                     {/* Right Side - Description Text */}
