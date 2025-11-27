@@ -4,7 +4,7 @@ function Header() {
       <div className="relative z-10 flex sm:w-3xl  flex-col items-center gap-10 text-center">
         
         <span className="rounded-full border border-white/10 bg-white/5 px-6 py-2 text-xs mt-4 sm:text-sm font-medium uppercase tracking-[0.1em] sm:tracking-[0.4em] text-white/70 backdrop-blur">
-          Designer - Developer
+          Designer & Developer
         </span>
 
         <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl uppercase">
