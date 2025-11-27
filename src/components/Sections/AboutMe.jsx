@@ -15,9 +15,9 @@ export default function AboutMe() {
             <div className="max-w-7xl mx-auto">
                 <div className="grid mx-auto grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     <div className='w-full'>
-                    <div className="flex items-center mx-auto justify-center rounded-full overflow-hidden w-[80%] lg:justify-start">
-                        <img src={myImage} alt="This is just my photo :)" />
-                    </div>
+                        <div className="flex items-center mx-auto justify-center rounded-full overflow-hidden w-[80%] lg:justify-start">
+                            <img src={myImage} alt="This is just my photo :)" />
+                        </div>
                     </div>
 
                     {/* Right Side - Description Text */}

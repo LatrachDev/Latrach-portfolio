@@ -9,8 +9,8 @@ export default function MainComponent() {
         cursorSize={100}
         isViscous={false}
         viscous={30}
-        iterationsViscous={32}
-        iterationsPoisson={32}
+        iterationsViscous={20}
+        iterationsPoisson={20}
         resolution={0.5}
         isBounce={false}
         autoDemo={true}

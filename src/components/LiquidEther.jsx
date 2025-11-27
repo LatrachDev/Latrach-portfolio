@@ -29,6 +29,8 @@ export default function LiquidEther({
   const intersectionObserverRef = useRef(null);
   const isVisibleRef = useRef(true);
   const resizeRafRef = useRef(null);
+  const performanceRef = useRef({ fps: 60, frameCount: 0, lastTime: 0 });
+  const adaptiveQualityRef = useRef({ resolution: resolution, iterationsPoisson: iterationsPoisson, iterationsViscous: iterationsViscous });
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -84,9 +86,18 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        // Detect mobile devices and reduce pixel ratio for better performance
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+        this.pixelRatio = isMobile || isLowEnd 
+          ? Math.min(window.devicePixelRatio || 1, 1.5)
+          : Math.min(window.devicePixelRatio || 1, 2);
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ 
+          antialias: !isMobile, // Disable antialiasing on mobile for performance
+          alpha: true,
+          powerPreference: 'high-performance'
+        });
         this.renderer.autoClear = false;
         this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
@@ -813,8 +824,13 @@ export default function LiquidEther({
         });
       }
       calcSize() {
-        const width = Math.max(1, Math.round(this.options.resolution * Common.width));
-        const height = Math.max(1, Math.round(this.options.resolution * Common.height));
+        // Cap maximum resolution for performance
+        const maxWidth = 1920;
+        const maxHeight = 1080;
+        const effectiveWidth = Math.min(Common.width, maxWidth);
+        const effectiveHeight = Math.min(Common.height, maxHeight);
+        const width = Math.max(1, Math.round(this.options.resolution * effectiveWidth));
+        const height = Math.max(1, Math.round(this.options.resolution * effectiveHeight));
         const px_x = 1.0 / width;
         const px_y = 1.0 / height;
         this.cellScale.set(px_x, px_y);
@@ -931,6 +947,17 @@ export default function LiquidEther({
         };
         document.addEventListener('visibilitychange', this._onVisibility);
         this.running = false;
+        // Performance monitoring
+        this.frameSkip = 0;
+        this.frameSkipCounter = 0;
+        this.lastFpsUpdate = performance.now();
+        this.fpsHistory = [];
+        // Adaptive quality targets
+        this.adaptiveQuality = {
+          resolution: props.adaptiveResolution || 0.5,
+          iterationsPoisson: props.adaptiveIterationsPoisson || 20,
+          iterationsViscous: props.adaptiveIterationsViscous || 20
+        };
       }
       init() {
         this.props.$wrapper.prepend(Common.renderer.domElement);
@@ -946,8 +973,76 @@ export default function LiquidEther({
         Common.update();
         this.output.update();
       }
+      updatePerformance() {
+        const now = performance.now();
+        this.fpsHistory.push(now);
+        
+        // Remove frames older than 1 second
+        while (this.fpsHistory.length > 0 && now - this.fpsHistory[0] > 1000) {
+          this.fpsHistory.shift();
+        }
+        
+        // Update FPS every second
+        const delta = now - this.lastFpsUpdate;
+        if (delta >= 1000) {
+          const fps = this.fpsHistory.length;
+          this.lastFpsUpdate = now;
+          
+          // Adaptive quality based on FPS
+          if (fps < 30 && this.frameSkip === 0) {
+            // Low FPS - reduce quality
+            this.frameSkip = 1; // Skip every other frame
+            if (this.output?.simulation) {
+              const sim = this.output.simulation;
+              const currentRes = sim.options.resolution;
+              const currentPoisson = sim.options.iterations_poisson;
+              const currentViscous = sim.options.iterations_viscous;
+              
+              // Reduce resolution and iterations
+              sim.options.resolution = Math.max(0.3, currentRes * 0.85);
+              sim.options.iterations_poisson = Math.max(16, Math.floor(currentPoisson * 0.75));
+              sim.options.iterations_viscous = Math.max(16, Math.floor(currentViscous * 0.75));
+              sim.resize();
+            }
+          } else if (fps > 55 && this.frameSkip > 0) {
+            // Good FPS - increase quality gradually
+            this.frameSkip = 0;
+            if (this.output?.simulation) {
+              const sim = this.output.simulation;
+              const currentRes = sim.options.resolution;
+              const targetRes = this.adaptiveQuality.resolution;
+              const currentPoisson = sim.options.iterations_poisson;
+              const targetPoisson = this.adaptiveQuality.iterationsPoisson;
+              const currentViscous = sim.options.iterations_viscous;
+              const targetViscous = this.adaptiveQuality.iterationsViscous;
+              
+              // Gradually increase quality
+              sim.options.resolution = Math.min(targetRes, currentRes * 1.05);
+              sim.options.iterations_poisson = Math.min(targetPoisson, Math.ceil(currentPoisson * 1.1));
+              sim.options.iterations_viscous = Math.min(targetViscous, Math.ceil(currentViscous * 1.1));
+              sim.resize();
+            }
+          }
+          
+          performanceRef.current.fps = fps;
+        } else {
+          this.fpsHistory.push(now);
+        }
+      }
       loop() {
         if (!this.running) return; // safety
+        
+        // Frame skipping for low-end devices
+        if (this.frameSkip > 0) {
+          this.frameSkipCounter++;
+          if (this.frameSkipCounter <= this.frameSkip) {
+            rafRef.current = requestAnimationFrame(this._loop);
+            return;
+          }
+          this.frameSkipCounter = 0;
+        }
+        
+        this.updatePerformance();
         this.render();
         rafRef.current = requestAnimationFrame(this._loop);
       }
@@ -983,6 +1078,20 @@ export default function LiquidEther({
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
+    // Detect device capabilities and adjust defaults
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+    const adjustedResolution = isMobile || isLowEnd ? Math.min(resolution, 0.4) : resolution;
+    const adjustedIterationsPoisson = isMobile || isLowEnd ? Math.min(iterationsPoisson, 20) : iterationsPoisson;
+    const adjustedIterationsViscous = isMobile || isLowEnd ? Math.min(iterationsViscous, 20) : iterationsViscous;
+    
+    // Store adaptive quality targets (for reference, also stored in WebGLManager)
+    adaptiveQualityRef.current = {
+      resolution: adjustedResolution,
+      iterationsPoisson: adjustedIterationsPoisson,
+      iterationsViscous: adjustedIterationsViscous
+    };
+
     const webgl = new WebGLManager({
       $wrapper: container,
       autoDemo,
@@ -990,7 +1099,10 @@ export default function LiquidEther({
       autoIntensity,
       takeoverDuration,
       autoResumeDelay,
-      autoRampDuration
+      autoRampDuration,
+      adaptiveResolution: adjustedResolution,
+      adaptiveIterationsPoisson: adjustedIterationsPoisson,
+      adaptiveIterationsViscous: adjustedIterationsViscous
     });
     webglRef.current = webgl;
 
@@ -1004,14 +1116,14 @@ export default function LiquidEther({
         cursor_size: cursorSize,
         isViscous,
         viscous,
-        iterations_viscous: iterationsViscous,
-        iterations_poisson: iterationsPoisson,
+        iterations_viscous: adjustedIterationsViscous,
+        iterations_poisson: adjustedIterationsPoisson,
         dt,
         BFECC,
-        resolution,
+        resolution: adjustedResolution,
         isBounce
       });
-      if (resolution !== prevRes) {
+      if (adjustedResolution !== prevRes) {
         sim.resize();
       }
     };
@@ -1094,17 +1206,39 @@ export default function LiquidEther({
     if (!webgl) return;
     const sim = webgl.output?.simulation;
     if (!sim) return;
+    
+    // Use adaptive quality values
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+    const adjustedResolution = isMobile || isLowEnd ? Math.min(resolution, 0.4) : resolution;
+    const adjustedIterationsPoisson = isMobile || isLowEnd ? Math.min(iterationsPoisson, 20) : iterationsPoisson;
+    const adjustedIterationsViscous = isMobile || isLowEnd ? Math.min(iterationsViscous, 20) : iterationsViscous;
+    
+    // Update adaptive quality targets
+    adaptiveQualityRef.current = {
+      resolution: adjustedResolution,
+      iterationsPoisson: adjustedIterationsPoisson,
+      iterationsViscous: adjustedIterationsViscous
+    };
+    
+    // Update WebGLManager adaptive quality if it exists
+    if (webgl.adaptiveQuality) {
+      webgl.adaptiveQuality.resolution = adjustedResolution;
+      webgl.adaptiveQuality.iterationsPoisson = adjustedIterationsPoisson;
+      webgl.adaptiveQuality.iterationsViscous = adjustedIterationsViscous;
+    }
+    
     const prevRes = sim.options.resolution;
     Object.assign(sim.options, {
       mouse_force: mouseForce,
       cursor_size: cursorSize,
       isViscous,
       viscous,
-      iterations_viscous: iterationsViscous,
-      iterations_poisson: iterationsPoisson,
+      iterations_viscous: adjustedIterationsViscous,
+      iterations_poisson: adjustedIterationsPoisson,
       dt,
       BFECC,
-      resolution,
+      resolution: adjustedResolution,
       isBounce
     });
     if (webgl.autoDriver) {
@@ -1117,7 +1251,7 @@ export default function LiquidEther({
         webgl.autoDriver.mouse.takeoverDuration = takeoverDuration;
       }
     }
-    if (resolution !== prevRes) {
+    if (adjustedResolution !== prevRes) {
       sim.resize();
     }
   }, [
