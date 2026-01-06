@@ -7,16 +7,16 @@ import WebDevelopmentProjects from "../../components/Sections/WebDevelopmentProj
 import DesignGallery from "../../components/Sections/DesignGallery";
 import Experiences from "../../components/Sections/Experiences";
 import Formations from "../../components/Sections/Formations";
+import MyTools from "../../components/Tools/MyTools";
 
 export default function Index() {
-
-
     return (
         <div>
             <SideBar />
             <Header />
             <MainComponent />
             <AboutMe />
+            <MyTools />
             <WebDevelopmentProjects />
             <DesignGallery />
             <Experiences />

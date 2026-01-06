@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function DesignGallery() {
+    const sectionRef = useRef(null);
+    useScrollReveal(sectionRef);
+
     const [selectedImage, setSelectedImage] = useState(null);
-    const [filter, setFilter] = useState('all');
 
     const designs = [
         {
@@ -70,26 +74,16 @@ export default function DesignGallery() {
         }
     ];
 
-    const categories = [
-        { id: 'all', name: 'All Designs' },
-        { id: 'ui', name: 'UI/UX' },
-        { id: 'branding', name: 'Branding' },
-        { id: 'print', name: 'Print' },
-        { id: 'digital', name: 'Digital' }
-    ];
-
-    const filteredDesigns = filter === 'all' 
-        ? designs 
-        : designs.filter(design => design.category === filter);
+    const visibleDesigns = designs.slice(0, 3);
 
     return (
-        <section id="gallery" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
+        <section ref={sectionRef} id="gallery" className="py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-block px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold mb-4">
+                    {/* <div className="inline-block px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold mb-4">
                         Design Portfolio
-                    </div>
+                    </div> */}
                     <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
                         Design Gallery
                     </h2>
@@ -98,26 +92,9 @@ export default function DesignGallery() {
                     </p>
                 </div>
 
-                {/* Filter Buttons */}
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {categories.map((category) => (
-                        <button
-                            key={category.id}
-                            onClick={() => setFilter(category.id)}
-                            className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                                filter === category.id
-                                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            }`}
-                        >
-                            {category.name}
-                        </button>
-                    ))}
-                </div>
-
                 {/* Gallery Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredDesigns.map((design) => (
+                    {visibleDesigns.map((design) => (
                         <div
                             key={design.id}
                             className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
@@ -144,6 +121,17 @@ export default function DesignGallery() {
                         </div>
                     ))}
                 </div>
+
+                {designs.length > 3 && (
+                    <div className="mt-10 flex justify-center">
+                        <Link
+                            to="/designer"
+                            className="px-8 py-3 rounded-full font-semibold transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-105"
+                        >
+                            View more
+                        </Link>
+                    </div>
+                )}
             </div>
 
             {/* Modal for Full Image View */}

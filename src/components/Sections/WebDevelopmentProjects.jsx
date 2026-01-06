@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function WebDevelopmentProjects() {
+    const sectionRef = useRef(null);
+    useScrollReveal(sectionRef);
+
     const [hoveredProject, setHoveredProject] = useState(null);
 
     const projects = [
@@ -60,14 +65,16 @@ export default function WebDevelopmentProjects() {
         }
     ];
 
+    const visibleProjects = projects.slice(0, 3);
+
     return (
-        <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-transparent">
+        <section ref={sectionRef} id="projects" className="py-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+                    {/* <div className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
                         Web Development
-                    </div>
+                    </div> */}
                     <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
                         My Projects
                     </h2>
@@ -78,7 +85,7 @@ export default function WebDevelopmentProjects() {
 
                 {/* Projects Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project) => (
+                    {visibleProjects.map((project) => (
                         <div
                             key={project.id}
                             className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
@@ -144,6 +151,17 @@ export default function WebDevelopmentProjects() {
                         </div>
                     ))}
                 </div>
+
+                {projects.length > 3 && (
+                    <div className="mt-10 flex justify-center">
+                        <Link
+                            to="/developer"
+                            className="px-8 py-3 rounded-full font-semibold transition-all duration-300 bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl hover:scale-105"
+                        >
+                            View more
+                        </Link>
+                    </div>
+                )}
             </div>
         </section>
     );

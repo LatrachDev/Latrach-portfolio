@@ -1,59 +1,78 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function Experiences() {
+    const sectionRef = useRef(null);
+    useScrollReveal(sectionRef);
+
     const experiences = [
         {
-            id: 1,
-            title: "Full Stack Developer - Freelance",
-            company: "Self-Employed",
-            period: "2022 - Present",
-            location: "Remote",
-            description: "Developed and delivered full-stack web applications for various clients using MERN stack. Managed projects from conception to deployment, ensuring high-quality code and client satisfaction.",
-            achievements: [
-                "Built 15+ web applications with modern technologies",
-                "Maintained 95%+ client satisfaction rate",
-                "Collaborated with international clients in French and English"
-            ],
-            technologies: ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS"]
+          id: 1,
+          title: "Développeur mobile",
+          company: "Escodeve",
+          period: "2 mois (2025)",
+          location: "Nador, Maroc",
+          description: "Développement d’applications mobiles avec React Native CLI, de la mise en place du projet jusqu’aux tests et à la publication interne.",
+          achievements: [
+            "Intégration d’interfaces mobiles responsives et performantes",
+            "Mise en place de bonnes pratiques de structuration de projet React Native",
+            "Collaboration avec l’équipe pour corriger les bugs et améliorer l’UX"
+          ],
+          technologies: ["React Native CLI", "JavaScript", "Git"]
         },
         {
-            id: 2,
-            title: "Graphic Designer & Developer",
-            company: "Marketing Agency",
-            period: "7 months",
-            location: "On-site",
-            description: "Worked in a fast-paced marketing agency environment, handling multiple projects simultaneously. Combined graphic design skills with web development to create comprehensive digital solutions.",
-            achievements: [
-                "Delivered 20+ design projects under tight deadlines",
-                "Improved project delivery time by 30%",
-                "Collaborated effectively with cross-functional teams"
-            ],
-            technologies: ["Adobe Creative Suite", "React", "Figma", "WordPress"]
+          id: 2,
+          title: "Chef d'équipe, conception graphique",
+          company: "ExtentMedia",
+          period: "7 mois (2024)",
+          location: "On-site",
+          description: "Gestion et coordination d’une équipe de designers pour la création de supports visuels et de campagnes marketing.",
+          achievements: [
+            "Supervision de la production de visuels pour des campagnes digitales et print",
+            "Optimisation du flux de travail de l’équipe créative",
+            "Collaboration étroite avec les clients pour garantir la cohérence de la charte graphique"
+          ],
+          technologies: ["Photoshop", "Illustrator", "Canva", "After Effects", "Excel"]
         },
         {
-            id: 3,
-            title: "UI/UX Designer - Freelance",
-            company: "Various Clients",
-            period: "2021 - 2022",
-            location: "Remote",
-            description: "Created user-centered designs for web and mobile applications. Focused on creating intuitive interfaces that enhance user experience and drive engagement.",
-            achievements: [
-                "Designed 10+ mobile and web applications",
-                "Increased user engagement by 40% on redesigned platforms",
-                "Established design systems for multiple brands"
-            ],
-            technologies: ["Figma", "Adobe XD", "Sketch", "Principle"]
+          id: 3,
+          title: "Stagiaire en conception graphique",
+          company: "Teknologiate",
+          period: "3 mois (2025)",
+          location: "On-site",
+          description: "Réalisation de supports graphiques pour le web et l’impression en respectant les chartes graphiques existantes.",
+          achievements: [
+            "Création de visuels pour les réseaux sociaux et supports marketing",
+            "Participation à la préparation de maquettes et prototypes graphiques",
+            "Amélioration des visuels existants selon les retours de l’équipe"
+          ],
+          technologies: ["Photoshop", "Illustrator"]
+        },
+        {
+          id: 4,
+          title: "Full Stack Developer ReactJS / Laravel",
+          company: "Freelancer - Landmark Agency",
+          period: "2022 - Présent",
+          location: "Remote",
+          description: "Développement d’applications web full stack pour l’agence Landmark, en combinant ReactJS côté front-end et Laravel côté back-end.",
+          achievements: [
+            "Conception et développement de fonctionnalités complètes (front + back)",
+            "Mise en place d’APIs REST sécurisées avec Laravel",
+            "Intégration d’interfaces modernes et responsives avec ReactJS"
+          ],
+          technologies: ["ReactJS", "Laravel", "MySQL", "Tailwind CSS", "Git"]
         }
-    ];
+      ];
+      
 
     return (
-        <section id="experiences" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-transparent">
+        <section ref={sectionRef} id="experiences" className="py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-transparent">
             <div className="max-w-6xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
+                    {/* <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
                         Professional Journey
-                    </div>
+                    </div> */}
                     <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
                         Work Experience
                     </h2>

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function Formations() {
+    const sectionRef = useRef(null);
+    useScrollReveal(sectionRef);
+
     const formations = [
         {
             id: 1,
@@ -25,13 +29,13 @@ export default function Formations() {
     ];
 
     return (
-        <section id="formations" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
+        <section ref={sectionRef} id="formations" className="py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
             <div className="max-w-6xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+                    {/* <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
                         Education & Training
-                    </div>
+                    </div> */}
                     <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
                         Formations & Education
                     </h2>

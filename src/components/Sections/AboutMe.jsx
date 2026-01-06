@@ -1,7 +1,11 @@
-import React from 'react';
-import myImage from '../../../public/Images/MyProfile.jpg'
+import React, { useRef } from 'react';
+import myImage from '../../../public/Images/myPic.png'
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function AboutMe() {
+    const sectionRef = useRef(null);
+    useScrollReveal(sectionRef);
+
     const handleContactClick = () => {
         // Scroll to contact section or open contact modal
         const contactSection = document.getElementById('contact');
@@ -11,11 +15,11 @@ export default function AboutMe() {
     };
 
     return (
-        <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
+        <section ref={sectionRef} id="about" className="pb-20 pt-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-gray-50">
             <div className="max-w-7xl mx-auto">
-                <div className="grid mx-auto grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <div className="grid mx-auto grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-16 items-center">
                     <div className='w-full'>
-                        <div className="flex items-center mx-auto justify-center rounded-full overflow-hidden w-[80%] lg:justify-start">
+                        <div className="flex items-center mx-auto justify-center overflow-hidden w-[80%] lg:justify-start">
                             <img src={myImage} alt="This is just my photo :)" />
                         </div>
                     </div>
@@ -28,7 +32,7 @@ export default function AboutMe() {
                         <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
                             About Me
                         </h2>
-                        <p className="text-lg text-gray-600 leading-relaxed">
+                        <p className="text-lg text-gray-600 leading-relaxed text-justify">
                             Entrepreneur and full stack MERN developer with over 2 years of freelance experience and a background in graphic design. During 7 months at a marketing agency, gained strong skills in managing projects under pressure, effective collaboration with teams, and excellent time management. Freelance experience enhanced my ability to communicate confidently with clients in both French and English, combining technical and UX/UI expertise to deliver impactful web and mobile applications.
                         </p>
                         <div className="flex flex-wrap gap-4 pt-4">

@@ -3,10 +3,10 @@ import StaggeredMenu from '../StaggeredMenu';
 
 const menuItems = [
   { label: 'Home', link: '/' },
-  { label: 'About', link: '/' },
-  { label: 'Gallery', link: '#gallery' },
-  { label: 'Website', link: '#dev' },
-  { label: 'Contact', link: '#contact' },
+  { label: 'About', link: '/#about' },
+  { label: 'Gallery', link: '/designer' },
+  { label: 'Website', link: '/developer' },
+  { label: 'Contact', link: '/#contact' },
 ];
 
 const socialItems = [
@@ -57,7 +57,7 @@ const SideBar = forwardRef(function SideBar(_, ref) {
         <button
           type="button"
           onClick={() => menuRef.current?.close?.()}
-          className="fixed top-6 right-6 z-[70] rounded-full border border-white/30 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-black/80"
+          className="fixed cursor-pointer top-6 right-6 z-[70] rounded-full border border-white/30 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-black/80"
           aria-label="Close menu"
         >
           Close menu

@@ -1,6 +1,7 @@
 // components/StaggeredMenu.jsx
 import React, { forwardRef, useCallback, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { Link } from 'react-router-dom';
 
 const StaggeredMenu = forwardRef(function StaggeredMenu(
   {
@@ -249,6 +250,33 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
     }
   }, [toggleMenu]);
 
+  const handleInternalNav = useCallback(
+    to => {
+      closeMenu();
+      if (typeof to !== 'string') return;
+
+      const hashIndex = to.indexOf('#');
+      if (hashIndex === -1) return;
+
+      const hash = to.slice(hashIndex + 1);
+      if (!hash) return;
+
+      const tryScroll = (attempt = 0) => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        if (attempt < 20) {
+          setTimeout(() => tryScroll(attempt + 1), 50);
+        }
+      };
+
+      setTimeout(() => tryScroll(0), 0);
+    },
+    [closeMenu]
+  );
+
   useImperativeHandle(
     ref,
     () => ({
@@ -266,14 +294,14 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
     >
       <nav className="fixed inset-x-0 top-0 z-30 flex items-center justify-center px-4 py-6 pointer-events-none">
         <div className="flex w-full max-w-6xl items-center justify-between rounded-full border border-white/10 bg-black/60 px-6 py-4 text-white shadow-[0_20px_60px_rgba(9,3,20,0.45)] backdrop-blur-xl pointer-events-auto">
-          <a href="#home" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img
               src="/Logo/Logo-Latrach-white.png"
               alt="Mohammed Latrach Logo"
               className="h-10 w-10 object-contain"
             />
             <span className="text-xs sm:text-lg font-semibold tracking-wide">Mohammed Latrach</span>
-          </a>
+          </Link>
 
           <button
             ref={toggleBtnRef}
@@ -338,16 +366,30 @@ const StaggeredMenu = forwardRef(function StaggeredMenu(
               {items && items.length ? (
                 items.map((it, idx) => (
                   <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
-                    <a
-                      className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
-                      href={it.link}
-                      aria-label={it.ariaLabel}
-                      data-index={idx + 1}
+                    {/^https?:\/\//i.test(it.link) ? (
+                      <a
+                        className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
+                        href={it.link}
+                        aria-label={it.ariaLabel}
+                        data-index={idx + 1}
                       >
-                      <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
-                        {it.label}
-                      </span>
-                    </a>
+                        <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
+                          {it.label}
+                        </span>
+                      </a>
+                    ) : (
+                      <Link
+                        className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
+                        to={it.link}
+                        aria-label={it.ariaLabel}
+                        data-index={idx + 1}
+                        onClick={() => handleInternalNav(it.link)}
+                      >
+                        <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
+                          {it.label}
+                        </span>
+                      </Link>
+                    )}
                   </li>
                 ))
               ) : (
